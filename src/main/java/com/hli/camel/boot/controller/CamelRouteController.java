@@ -1,6 +1,5 @@
 package com.hli.camel.boot.controller;
 
-import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +10,6 @@ public class CamelController {
 
     @Autowired
     ProducerTemplate producerTemplate;
-
-    @Autowired
-    ConsumerTemplate consumerTemplate;
 
     @GetMapping(value = "/jsonToMQ", produces = "text/plain")
     public String jsonToMQ() {
