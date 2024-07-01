@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  camel-integration-application:
+    image: ${GROUP_ID}/camel-integration-application:${SERVICE_VERSION:-latest}
+    ports:
+      - "8080:8080"
+    working_dir: ${WORKING_DIR:-/}
+    user: root
+    volumes:
+      - ../request:${WORKING_DIR:-/}request:ro
+      - ../response:${WORKING_DIR:-/}response:rw
+    networks:
+      - application
+    depends_on:
+      - ibmmq-mac
+
+#  ibmmq:
+#    image: icr.io/ibm-messaging/mq:latest
+#    container_name: ibmmq
+#    ports:
+#      - 9443:9443
+#      - 1414:1414
+#    volumes:
+#      - mqData:/mnt/mqm
+#    environment:
+#      LICENSE: accept
+#      MQ_QMGR_NAME: QM1
+#      MQ_ADMIN_PASSWORD: passw0rd
+#      MQ_APP_PASSWORD: passw0rd
+#    networks:
+#      - application
+
+  ibmmq-mac:
+    image: ibm-mqadvanced-server-dev:9.3.5.1-arm64
+    container_name: ibmmq
+    ports:
+      - 9443:9443
+      - 1414:1414
+    volumes:
+      - mqData:/mnt/mqm
+    environment:
+      LICENSE: accept
+      MQ_QMGR_NAME: QM1
+      MQ_ADMIN_PASSWORD: passw0rd
+      MQ_APP_PASSWORD: passw0rd
+    networks:
+      - application
+
+volumes:
+  mqData:
+
+
+networks:
+  application:
+    driver: bridge

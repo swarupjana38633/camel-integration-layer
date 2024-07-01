@@ -6,10 +6,15 @@ import com.hli.camel.boot.process.ObjectToJsonProcessor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dataformat.bindy.fixed.BindyFixedLengthDataFormat;
 import org.apache.camel.spi.DataFormat;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
 public class IntegrationRoute extends RouteBuilder {
+
+    @Autowired
+    private Environment env;
 
     @Override
     public void configure() {
@@ -18,10 +23,10 @@ public class IntegrationRoute extends RouteBuilder {
         DataFormat bindyFixedLength = new BindyFixedLengthDataFormat(AccountDetail.class);
 
         // Set the directory path for the request files
-        String requestDir = "/Users/swarup.jana/Documents/HLI/projects/POC/camel-integration-layer/src/main/resources/request/";
+        String requestDir = env.getProperty("camel.sourcefolder");
 
         // Set the directory path for the response files
-        String responseDir = "/Users/swarup.jana/Documents/HLI/projects/POC/camel-integration-layer/src/main/resources/response/";
+        String responseDir = env.getProperty("camel.destinationfolder");
 
         // 1. JSON as input -> convert to fixed length -> sent fixed length to IBM MQ
         // Configure the route for processing JSON files from the request directory
